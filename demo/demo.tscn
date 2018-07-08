@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/procedural_crosshair/procedural_crosshair.gd" type="Script" id=1]
+[ext_resource path="res://addons/procedural_crosshair/icon.png" type="Texture" id=2]
+
+[node name="Node2D" type="Node2D" index="0"]
+_sections_unfolded = [ "Transform", "Visibility" ]
+
+[node name="Crosshair" type="Node2D" parent="." index="0"]
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_icon": ExtResource( 2 )
+}
+spread = 0.0
+shape_points = 12
+shape_filled = false
+shape_stroke_modulate = Color( 1, 1, 1, 1 )
+shape_fill_modulate = Color( 1, 1, 1, 0.2 )
+shape_offset = 0.0
+marker = 0
+markers = 4
+marker_length = 10.0
+marker_width = 2.0
+marker_rotation_local = 0.0
+marker_rotation_global = 0.0
+marker_modulate = Color( 1, 1, 1, 1 )
+
