@@ -1,27 +1,61 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/procedural_crosshair/procedural_crosshair.gd" type="Script" id=1]
 [ext_resource path="res://addons/procedural_crosshair/icon.png" type="Texture" id=2]
 
+[sub_resource type="Animation" id=1]
+
+resource_name = "animate_spread"
+length = 2.0
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Crosshair:spread")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 2 ),
+"transitions": PoolRealArray( -2, -2, -2 ),
+"update": 0,
+"values": [ 0.0, 100.0, 0.0 ]
+}
+
 [node name="Node2D" type="Node2D" index="0"]
 _sections_unfolded = [ "Transform", "Visibility" ]
 
-[node name="Crosshair" type="Node2D" parent="." index="0"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="0"]
+root_node = NodePath("..")
+autoplay = "animate_spread"
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 0.5
+anims/animate_spread = SubResource( 1 )
+blend_times = [  ]
+_sections_unfolded = [ "Playback Options" ]
+
+[node name="Crosshair" type="Node2D" parent="." index="1"]
+position = Vector2( 512, 288 )
 script = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
 __meta__ = {
 "_editor_icon": ExtResource( 2 )
 }
 spread = 0.0
-shape_points = 12
-shape_filled = false
+shape_sides = 64
+shape_stroke_width = 1.1
+fill_shape = false
 shape_stroke_modulate = Color( 1, 1, 1, 1 )
 shape_fill_modulate = Color( 1, 1, 1, 0.2 )
-shape_offset = 0.0
-marker = 0
-markers = 4
+marker_style = 0
+markers_count = 4
 marker_length = 10.0
 marker_width = 2.0
-marker_rotation_local = 0.0
-marker_rotation_global = 0.0
-marker_modulate = Color( 1, 1, 1, 1 )
+marker_offset = 0.0
+marker_local_rotation = 0.0
+marker_global_rotation = 0.0
+marker_modulate_base = Color( 1, 1, 1, 1 )
+marker_modulate_tip = Color( 1, 1, 1, 0 )
+use_antialiasing = true
 
