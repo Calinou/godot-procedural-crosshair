@@ -92,7 +92,7 @@ func _draw():
 	# Stores marker color arrays to be drawn
 	var marker_colors = []
 
-	# Shape
+	# Compute shape
 	for point in range(0, shape_sides):
 		shape_points.append(Vector2(0, -spread).rotated(float(point)/shape_sides*TAU + deg2rad(shape_rotation)))
 
@@ -103,12 +103,17 @@ func _draw():
 	for _point in shape_points:
 		shape_colors.append(shape_fill_modulate)
 
+	if fill_shape:
+		# Draw the shape's fill
+		draw_polygon(shape_points, shape_colors, [], null, null, use_antialiasing)
+
 	# Draw the shape's stroke
 	draw_polyline(shape_points, shape_stroke_modulate, shape_stroke_width, use_antialiasing)
 
-	# Markers
+	# Compute markers
 	for marker in range(0, markers_count):
 		var rot = float(marker)/markers_count*TAU + deg2rad(marker_global_rotation)
+
 		if marker_style == Marker.LINE:
 			marker_points.append([
 				Vector2(0, min(0, -marker_offset - spread - marker_length)).rotated(rot),
@@ -140,10 +145,23 @@ func _draw():
 				marker_modulate_tip,
 			])
 
-	if fill_shape:
-		# Draw the shape's fill
-		draw_polygon(shape_points, shape_colors, [], null, null, use_antialiasing)
+		elif marker_style == Marker.TRIANGLE:
+			marker_points.append([
+				Vector2(-marker_width, min(0, -marker_offset - spread - marker_length)).rotated(rot),
+				Vector2(marker_width, min(0, -marker_offset - spread - marker_length)).rotated(rot),
+				Vector2(0, min(0, -marker_offset - spread)).rotated(rot),
+			])
+
+			marker_colors.append([
+				marker_modulate_base,
+				marker_modulate_base,
+				marker_modulate_tip,
+			])
 
 	# Draw markers
-	for index in range(0, marker_points.size()):
-		draw_polyline_colors(marker_points[index], marker_colors[index], marker_width, use_antialiasing)
+	if marker_style == Marker.LINE:
+		for index in range(0, marker_points.size()):
+			draw_polyline_colors(marker_points[index], marker_colors[index], marker_width, use_antialiasing)
+	elif marker_style == Marker.TRIANGLE:
+		for index in range(0, marker_points.size()):
+			draw_polygon(marker_points[index], marker_colors[index], [], null, null, use_antialiasing)
