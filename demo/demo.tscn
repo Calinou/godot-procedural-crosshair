@@ -52,6 +52,7 @@ shape_fill_modulate = Color( 1, 1, 1, 0.2 )
 marker_style = 0
 markers_count = 4
 marker_length = 10.0
+marker_arms_sides = 2
 marker_arms_length = 10.0
 marker_arms_slope = 0.0
 marker_width = 2.0

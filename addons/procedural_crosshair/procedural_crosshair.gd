@@ -9,7 +9,6 @@ extends Node2D
 enum Marker {
 	LINE,
 	TRIANGLE,
-	ARC,
 }
 
 # The spread value used by the crosshair (in pixels)
@@ -42,6 +41,10 @@ export(int, 0, 32) var markers_count = 4
 
 # The length of markers
 export(float, 0.0, 100.0) var marker_length = 10.0
+
+# The number of sides to use for the markers' arms
+# Higher values will look closer to an arc
+export(int, 2, 16) var marker_arms_sides = 2
 
 # The length of markers' arms
 # Non-zero values will create a T-shape or arrow depending on the arms' slope
@@ -125,25 +128,22 @@ func _draw():
 				marker_modulate_tip,
 			])
 
-			marker_points.append([
-				Vector2(0, min(0, -marker_offset - spread - marker_length)).rotated(rot),
-				Vector2(-marker_arms_length, min(0, -marker_offset - spread - marker_length - marker_arms_slope)).rotated(rot),
-			])
+			for arm_line in range(0, marker_arms_sides):
+				var cur = arm_line*marker_arms_length/marker_arms_sides
+				var next = (arm_line+1)*marker_arms_length/marker_arms_sides
+				var cur_crv = cur/marker_arms_sides
+				var next_crv = next/marker_arms_sides
+				var half = marker_arms_length/2
 
-			marker_colors.append([
-				marker_modulate_base,
-				marker_modulate_tip,
-			])
+				marker_points.append([
+					Vector2(cur - half + cos(cur_crv)*marker_arms_slope, min(0, -marker_offset - spread - marker_arms_length - sin(cur_crv)*marker_arms_slope)).rotated(rot),
+					Vector2(next - half + cos(next_crv)*marker_arms_slope, min(0, -marker_offset - spread - marker_arms_length - sin(next_crv)*marker_arms_slope)).rotated(rot),
+				])
 
-			marker_points.append([
-				Vector2(0, min(0, -marker_offset - spread - marker_length)).rotated(rot),
-				Vector2(marker_arms_length, min(0, -marker_offset - spread - marker_length - marker_arms_slope)).rotated(rot),
-			])
-
-			marker_colors.append([
-				marker_modulate_base,
-				marker_modulate_tip,
-			])
+				marker_colors.append([
+					marker_modulate_base,
+					marker_modulate_tip,
+				])
 
 		elif marker_style == Marker.TRIANGLE:
 			marker_points.append([
