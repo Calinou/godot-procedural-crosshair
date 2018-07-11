@@ -12,8 +12,8 @@ enum Marker {
 	ARC,
 }
 
-# The spread value used by the crosshair (in pixels)
-export(float, 0.0, 500.0) var spread = 0.0 setget _spread_changed
+# The shape's size
+export(float, 0.0, 1000.0) var shape_size = 1.0 setget _shape_size_changed
 
 # The number of sides to use for the shape
 # Higher values will look closer to a circle
@@ -26,16 +26,20 @@ export(float, 0.0, 50.0) var shape_stroke_width = 1.1
 export(float, -360.0, 360.0) var shape_rotation = 0.0
 
 # Whether to fill the shape with a solid color (see `shape_fill_modulate`)
-export var fill_shape = false
+export var fill_shape = true
 
 # The color to use for the shape's stroke
 export(Color, RGBA) var shape_stroke_modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 # The color to use for the shape's fill
-export(Color, RGBA) var shape_fill_modulate = Color(1.0, 1.0, 1.0, 0.2)
+export(Color, RGBA) var shape_fill_modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 # The style of markers to use
 export(Marker) var marker_style = Marker.LINE
+
+# The markers' offset from the center
+# Higher values look more spread apart
+export(float, 0.0, 1000.0) var markers_spread = 0.0 setget _markers_spread_changed
 
 # The number of markers
 export(int, 0, 32) var markers_count = 4
@@ -54,11 +58,6 @@ export(float, -100.0, 100.0) var marker_arms_slope = 0.0
 # The width of markers
 export(float, 0.0, 50.0) var marker_width = 2.0
 
-# The offset between the shape and markers
-# Useful to make the markers appear "outside" (positive value) or "inside"
-# (negative value) of the markers
-export(float, -50.0, 50.0) var marker_offset = 0.0
-
 # The rotation of each marker (in degrees)
 # TODO: Not yet implemented
 export(float, -360.0, 360.0) var marker_local_rotation = 0.0
@@ -75,8 +74,12 @@ export(Color, RGBA) var marker_modulate_tip = Color(1.0, 1.0, 1.0, 0.0)
 # Whether to use anti-aliasing when available
 export var use_antialiasing = true
 
-func _spread_changed(spr):
-	spread = spr
+func _shape_size_changed(size):
+	shape_size = size
+	update()
+
+func _markers_spread_changed(spread):
+	markers_spread = spread
 	update()
 
 func _enter_tree():
@@ -94,7 +97,7 @@ func _draw():
 
 	# Compute shape
 	for point in range(0, shape_sides):
-		shape_points.append(Vector2(0, -spread).rotated(float(point)/shape_sides*TAU + deg2rad(shape_rotation)))
+		shape_points.append(Vector2(0, -shape_size).rotated(float(point)/shape_sides*TAU + deg2rad(shape_rotation)))
 
 	# Add the last point to close the shape
 	shape_points.append(shape_points[0])
@@ -116,8 +119,8 @@ func _draw():
 
 		if marker_style == Marker.LINE:
 			marker_points.append([
-				Vector2(0, min(0, -marker_offset - spread - marker_length)).rotated(rot),
-				Vector2(0, min(0, -marker_offset - spread)).rotated(rot),
+				Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+				Vector2(0, min(0, -markers_spread)).rotated(rot),
 			])
 
 			marker_colors.append([
@@ -126,8 +129,8 @@ func _draw():
 			])
 
 			marker_points.append([
-				Vector2(0, min(0, -marker_offset - spread - marker_length)).rotated(rot),
-				Vector2(-marker_arms_length, min(0, -marker_offset - spread - marker_length - marker_arms_slope)).rotated(rot),
+				Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+				Vector2(-marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
 			])
 
 			marker_colors.append([
@@ -136,8 +139,8 @@ func _draw():
 			])
 
 			marker_points.append([
-				Vector2(0, min(0, -marker_offset - spread - marker_length)).rotated(rot),
-				Vector2(marker_arms_length, min(0, -marker_offset - spread - marker_length - marker_arms_slope)).rotated(rot),
+				Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+				Vector2(marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
 			])
 
 			marker_colors.append([
@@ -147,9 +150,9 @@ func _draw():
 
 		elif marker_style == Marker.TRIANGLE:
 			marker_points.append([
-				Vector2(-marker_width, min(0, -marker_offset - spread - marker_length)).rotated(rot),
-				Vector2(marker_width, min(0, -marker_offset - spread - marker_length)).rotated(rot),
-				Vector2(0, min(0, -marker_offset - spread)).rotated(rot),
+				Vector2(-marker_width, min(0, -markers_spread - marker_length)).rotated(rot),
+				Vector2(marker_width, min(0, -markers_spread - marker_length)).rotated(rot),
+				Vector2(0, min(0, -markers_spread)).rotated(rot),
 			])
 
 			marker_colors.append([
