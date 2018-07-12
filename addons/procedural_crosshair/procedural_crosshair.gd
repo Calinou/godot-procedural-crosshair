@@ -22,6 +22,9 @@ export(int, 3, 64) var shape_sides = 64
 # The width of the shape's stroke
 export(float, 0.0, 50.0) var shape_stroke_width = 1.1
 
+# The width of the shape's outline
+export(float, 0.0, 50.0) var shape_outline_width = 1.1
+
 # The rotation of the shape (in degrees)
 export(float, -360.0, 360.0) var shape_rotation = 0.0
 
@@ -33,6 +36,9 @@ export(Color, RGBA) var shape_stroke_modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 # The color to use for the shape's fill
 export(Color, RGBA) var shape_fill_modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+# The color to use for the shape's outline
+export(Color, RGBA) var shape_outline_modulate = Color(0.0, 0.0, 0.0, 0.5)
 
 # The style of markers to use
 export(Marker) var marker_style = Marker.LINE
@@ -58,6 +64,9 @@ export(float, -100.0, 100.0) var marker_arms_slope = 0.0
 # The width of markers
 export(float, 0.0, 50.0) var marker_width = 2.0
 
+# The width of markers' outlines
+export(float, 0.0, 50.0) var marker_outline_width = 1.0
+
 # The rotation of each marker (in degrees)
 # TODO: Not yet implemented
 export(float, -360.0, 360.0) var marker_local_rotation = 0.0
@@ -70,6 +79,12 @@ export(Color, RGBA) var marker_modulate_base = Color(1.0, 1.0, 1.0, 1.0)
 
 # The color to use at the tip of markers
 export(Color, RGBA) var marker_modulate_tip = Color(1.0, 1.0, 1.0, 0.0)
+
+# The color to use for the markers' outlines (at the base)
+export(Color, RGBA) var marker_modulate_outline_base = Color(0.0, 0.0, 0.0, 0.5)
+
+# The color to use for the markers' outlines (at the tip)
+export(Color, RGBA) var marker_modulate_outline_tip = Color(0.0, 0.0, 0.0, 0.0)
 
 # Whether to use anti-aliasing when available
 export var use_antialiasing = true
@@ -95,7 +110,7 @@ func _draw():
 	# Stores marker color arrays to be drawn
 	var marker_colors = []
 
-	# Compute shape
+	# Compute the shape
 	for point in range(0, shape_sides):
 		shape_points.append(Vector2(0, -shape_size).rotated(float(point)/shape_sides*TAU + deg2rad(shape_rotation)))
 
@@ -106,47 +121,81 @@ func _draw():
 	for _point in shape_points:
 		shape_colors.append(shape_fill_modulate)
 
+	# Draw the shape's stroke and outline
+	# The outline must be drawn before so that it appears behind the stroke
+	draw_polyline(
+			shape_points,
+			shape_outline_modulate,
+			shape_stroke_width + shape_outline_width,
+			use_antialiasing
+	)
+	draw_polyline(
+			shape_points,
+			shape_stroke_modulate,
+			shape_stroke_width,
+			use_antialiasing
+	)
+
 	if fill_shape:
 		# Draw the shape's fill
+		# Drawn last, so it appears above the stroke and outline
 		draw_polygon(shape_points, shape_colors, [], null, null, use_antialiasing)
-
-	# Draw the shape's stroke
-	draw_polyline(shape_points, shape_stroke_modulate, shape_stroke_width, use_antialiasing)
 
 	# Compute markers
 	for marker in range(0, markers_count):
 		var rot = float(marker)/markers_count*TAU + deg2rad(marker_global_rotation)
 
 		if marker_style == Marker.LINE:
+			# We need different point sets for the fill and outline, because
+			# draw_polyline() does not support any kind of line caps
+			# The primary marker line is also shortened by `marker_width/2` to
+			# avoid overlapping with the marker arms
 			marker_points.append([
-				Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-				Vector2(0, min(0, -markers_spread)).rotated(rot),
-			])
-
-			marker_colors.append([
-				marker_modulate_base,
-				marker_modulate_tip,
-			])
-
-			marker_points.append([
-				Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-				Vector2(-marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-			])
-
-			marker_colors.append([
-				marker_modulate_base,
-				marker_modulate_tip,
+				[
+					Vector2(0, min(0, -markers_spread - marker_length + marker_width/2)).rotated(rot),
+					Vector2(0, min(0, -markers_spread)).rotated(rot),
+				],
+				[
+					Vector2(0, min(0, -markers_spread - marker_length + marker_width/2 - marker_outline_width)).rotated(rot),
+					Vector2(0, min(0, -markers_spread + marker_outline_width)).rotated(rot),
+				],
 			])
 
 			marker_points.append([
-				Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-				Vector2(marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+				[
+					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+					Vector2(-marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+				],
+				[
+					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+					Vector2(-marker_arms_length - marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+				],
 			])
 
-			marker_colors.append([
-				marker_modulate_base,
-				marker_modulate_tip,
+			marker_points.append([
+				[
+					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+					Vector2(marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+				],
+				[
+					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+					Vector2(marker_arms_length + marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+				],
 			])
+
+			for i in range(0, 3):
+				marker_colors.append([
+					[
+						# Fill color
+						marker_modulate_base,
+						marker_modulate_tip,
+					],
+					[
+						# Outline color
+						marker_modulate_outline_base,
+						marker_modulate_outline_tip,
+					],
+				])
 
 		elif marker_style == Marker.TRIANGLE:
 			marker_points.append([
@@ -156,15 +205,31 @@ func _draw():
 			])
 
 			marker_colors.append([
-				marker_modulate_base,
-				marker_modulate_base,
-				marker_modulate_tip,
+				[
+					# Fill color
+					marker_modulate_base,
+					marker_modulate_base,
+					marker_modulate_tip,
+				],
+				[
+					# Outline color
+					marker_modulate_outline_base,
+					marker_modulate_outline_base,
+					marker_modulate_outline_tip,
+				],
 			])
 
 	# Draw markers
-	if marker_style == Marker.LINE:
-		for index in range(0, marker_points.size()):
-			draw_polyline_colors(marker_points[index], marker_colors[index], marker_width, use_antialiasing)
-	elif marker_style == Marker.TRIANGLE:
-		for index in range(0, marker_points.size()):
-			draw_polygon(marker_points[index], marker_colors[index], [], null, null, use_antialiasing)
+	for index in range(0, marker_points.size()):
+		if marker_style == Marker.LINE:
+			if marker_outline_width > 0:
+				draw_polyline_colors(marker_points[index][1], marker_colors[index][1], marker_width + marker_outline_width, use_antialiasing)
+			draw_polyline_colors(marker_points[index][0], marker_colors[index][0], marker_width, use_antialiasing)
+		elif marker_style == Marker.TRIANGLE:
+			# Outline rendering disabled as it looks broken
+			"""
+			if marker_outline_width > 0:
+				pass
+				draw_polyline_colors(marker_points[index], marker_colors[index][1], marker_width + marker_outline_width, use_antialiasing)
+			"""
+			draw_polygon(marker_points[index], marker_colors[index][0], [], null, null, use_antialiasing)
