@@ -59,6 +59,7 @@ marker_arms_length = 10.0
 marker_arms_slope = 0.0
 marker_width = 2.0
 marker_outline_width = 1.0
+marker_angle_arc = 360.0
 marker_local_rotation = 0.0
 marker_global_rotation = 0.0
 marker_modulate_base = Color( 1, 1, 1, 1 )

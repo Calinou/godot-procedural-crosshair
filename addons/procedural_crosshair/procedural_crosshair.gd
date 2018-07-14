@@ -68,6 +68,9 @@ export(float, 0.0, 50.0) var marker_width = 2.0
 # The width of markers' outlines
 export(float, 0.0, 50.0) var marker_outline_width = 1.0
 
+# How many degrees should the markers span over
+export(float, 0.0, 360.0) var marker_angle_arc = 360.0
+
 # The rotation of each marker (in degrees)
 # TODO: Not yet implemented
 export(float, -360.0, 360.0) var marker_local_rotation = 0.0
@@ -146,7 +149,7 @@ func _draw():
 
 	# Compute markers
 	for marker in range(0, markers_count):
-		var rot = float(marker)/markers_count*TAU + deg2rad(marker_global_rotation)
+		var rot = float(marker)/markers_count*deg2rad(marker_angle_arc) + deg2rad(marker_global_rotation)
 
 		if marker_style == Marker.LINE:
 			# We need different point sets for the fill and outline, because
