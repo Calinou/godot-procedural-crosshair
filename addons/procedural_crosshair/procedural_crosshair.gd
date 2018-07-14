@@ -9,6 +9,7 @@ extends Node2D
 enum Marker {
 	LINE,
 	TRIANGLE,
+	# TODO: Not yet implemented
 	ARC,
 }
 
@@ -105,6 +106,8 @@ func _draw():
 	var shape_points = []
 	# Shape color array to be drawn
 	var shape_colors = []
+	# Number of lines to be drawn
+	var lines = 0
 	# Stores marker point arrays to be drawn
 	var marker_points = []
 	# Stores marker color arrays to be drawn
@@ -150,40 +153,46 @@ func _draw():
 			# draw_polyline() does not support any kind of line caps
 			# The primary marker line is also shortened by `marker_width/2` to
 			# avoid overlapping with the marker arms
-			marker_points.append([
-				[
-					Vector2(0, min(0, -markers_spread - marker_length + marker_width/2)).rotated(rot),
-					Vector2(0, min(0, -markers_spread)).rotated(rot),
-				],
-				[
-					Vector2(0, min(0, -markers_spread - marker_length + marker_width/2 - marker_outline_width)).rotated(rot),
-					Vector2(0, min(0, -markers_spread + marker_outline_width)).rotated(rot),
-				],
-			])
+			if marker_length > 0.0:
+				marker_points.append([
+					[
+						Vector2(0, min(0, -markers_spread - marker_length + marker_width/2)).rotated(rot),
+						Vector2(0, min(0, -markers_spread)).rotated(rot),
+					],
+					[
+						Vector2(0, min(0, -markers_spread - marker_length + marker_width/2 - marker_outline_width)).rotated(rot),
+						Vector2(0, min(0, -markers_spread + marker_outline_width)).rotated(rot),
+					],
+				])
 
-			marker_points.append([
-				[
-					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-					Vector2(-marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-				],
-				[
-					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-					Vector2(-marker_arms_length - marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-				],
-			])
+			lines = 1
 
-			marker_points.append([
-				[
-					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-					Vector2(marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-				],
-				[
-					Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-					Vector2(marker_arms_length + marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-				],
-			])
+			if marker_arms_length > 0.0:
+				marker_points.append([
+					[
+						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+						Vector2(-marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+					],
+					[
+						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+						Vector2(-marker_arms_length - marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+					],
+				])
 
-			for i in range(0, 3):
+				marker_points.append([
+					[
+						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+						Vector2(marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+					],
+					[
+						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
+						Vector2(marker_arms_length + marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
+					],
+				])
+
+				lines = 3
+
+			for i in range(0, lines):
 				marker_colors.append([
 					[
 						# Fill color
@@ -222,7 +231,7 @@ func _draw():
 	# Draw markers
 	for index in range(0, marker_points.size()):
 		if marker_style == Marker.LINE:
-			if marker_outline_width > 0:
+			if marker_outline_width > 0.0:
 				draw_polyline_colors(marker_points[index][1], marker_colors[index][1], marker_width + marker_outline_width, use_antialiasing)
 			draw_polyline_colors(marker_points[index][0], marker_colors[index][0], marker_width, use_antialiasing)
 		elif marker_style == Marker.TRIANGLE:
