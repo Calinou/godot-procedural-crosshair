@@ -149,7 +149,10 @@ func _draw():
 
 	# Compute markers
 	for marker in range(0, markers_count):
-		var rot = float(marker)/markers_count*deg2rad(marker_angle_arc) + deg2rad(marker_global_rotation)
+		var rot_global = \
+				float(marker)/markers_count*deg2rad(marker_angle_arc) \
+				+ deg2rad(marker_global_rotation)
+		var rot_local = rot_global + deg2rad(marker_local_rotation)
 
 		if marker_style == Marker.LINE:
 			# We need different point sets for the fill and outline, because
@@ -157,43 +160,58 @@ func _draw():
 			# The primary marker line is also shortened by `marker_width/2` to
 			# avoid overlapping with the marker arms
 			if marker_length > 0.0:
+				lines = 1
+
 				marker_points.append([
 					[
-						Vector2(0, min(0, -markers_spread - marker_length + marker_width/2)).rotated(rot),
-						Vector2(0, min(0, -markers_spread)).rotated(rot),
+						Vector2(0, -marker_length/2 + marker_width/2) \
+								.rotated(rot_local)
+						+ Vector2(0, -markers_spread) \
+								.rotated(rot_global),
+						Vector2(0, marker_length/2 + marker_width/2) \
+								.rotated(rot_local)
+						+ Vector2(0, -markers_spread) \
+								.rotated(rot_global),
 					],
 					[
-						Vector2(0, min(0, -markers_spread - marker_length + marker_width/2 - marker_outline_width)).rotated(rot),
-						Vector2(0, min(0, -markers_spread + marker_outline_width)).rotated(rot),
+						Vector2(0, -marker_length/2 + marker_width/2 + marker_outline_width/2) \
+								.rotated(rot_local) \
+						+ Vector2(0, -markers_spread) \
+								.rotated(rot_global),
+						Vector2(0, marker_length/2 + marker_width/2 + marker_outline_width/2) \
+								.rotated(rot_local)
+						+ Vector2(0, -markers_spread) \
+								.rotated(rot_global),
 					],
 				])
-
-			lines = 1
 
 			if marker_arms_length > 0.0:
-				marker_points.append([
-					[
-						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-						Vector2(-marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-					],
-					[
-						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-						Vector2(-marker_arms_length - marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-					],
-				])
-
-				marker_points.append([
-					[
-						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-						Vector2(marker_arms_length, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-					],
-					[
-						Vector2(0, min(0, -markers_spread - marker_length)).rotated(rot),
-						Vector2(marker_arms_length + marker_outline_width, min(0, -markers_spread - marker_length - marker_arms_slope)).rotated(rot),
-					],
-				])
-
 				lines = 3
+
+				for side in [-1, 1]:
+					# Left side/right side
+					marker_points.append([
+						[
+							Vector2(0, -marker_length/2) \
+									.rotated(rot_local)
+							+ Vector2(0, -markers_spread) \
+									.rotated(rot_global),
+							Vector2(-marker_arms_length*side, -marker_length/2 - marker_arms_slope) \
+									.rotated(rot_local)
+							+ Vector2(0, -markers_spread) \
+									.rotated(rot_global),
+						],
+						[
+							Vector2(0, -marker_length/2) \
+									.rotated(rot_local)
+							+ Vector2(0, -markers_spread) \
+									.rotated(rot_global),
+							Vector2(-marker_arms_length*side - marker_outline_width*side/2, -marker_length/2 - marker_arms_slope) \
+									.rotated(rot_local)
+							+ Vector2(0, -markers_spread) \
+									.rotated(rot_global),
+						],
+					])
 
 			for i in range(0, lines):
 				marker_colors.append([
@@ -211,9 +229,18 @@ func _draw():
 
 		elif marker_style == Marker.TRIANGLE:
 			marker_points.append([
-				Vector2(-marker_width, min(0, -markers_spread - marker_length)).rotated(rot),
-				Vector2(marker_width, min(0, -markers_spread - marker_length)).rotated(rot),
-				Vector2(0, min(0, -markers_spread)).rotated(rot),
+				Vector2(-marker_width, -marker_length) \
+						.rotated(rot_local)
+				+ Vector2(0, -markers_spread) \
+						.rotated(rot_global),
+				Vector2(marker_width, -marker_length) \
+						.rotated(rot_local)
+				+ Vector2(0, -markers_spread) \
+						.rotated(rot_global),
+				Vector2(0, 0) \
+						.rotated(rot_local)
+				+ Vector2(0, -markers_spread) \
+						.rotated(rot_global),
 			])
 
 			marker_colors.append([
@@ -235,13 +262,37 @@ func _draw():
 	for index in range(0, marker_points.size()):
 		if marker_style == Marker.LINE:
 			if marker_outline_width > 0.0:
-				draw_polyline_colors(marker_points[index][1], marker_colors[index][1], marker_width + marker_outline_width, use_antialiasing)
-			draw_polyline_colors(marker_points[index][0], marker_colors[index][0], marker_width, use_antialiasing)
+				draw_polyline_colors(
+						marker_points[index][1],
+						marker_colors[index][1],
+						marker_width + marker_outline_width,
+						use_antialiasing
+				)
+
+			draw_polyline_colors(
+					marker_points[index][0],
+					marker_colors[index][0],
+					marker_width,
+					use_antialiasing
+			)
+
 		elif marker_style == Marker.TRIANGLE:
 			# Outline rendering disabled as it looks broken
 			"""
 			if marker_outline_width > 0:
 				pass
-				draw_polyline_colors(marker_points[index], marker_colors[index][1], marker_width + marker_outline_width, use_antialiasing)
+				draw_polyline_colors(
+						marker_points[index],
+						marker_colors[index][1],
+						marker_width + marker_outline_width,
+						use_antialiasing
+				)
 			"""
-			draw_polygon(marker_points[index], marker_colors[index][0], [], null, null, use_antialiasing)
+			draw_polygon(
+					marker_points[index],
+					marker_colors[index][0],
+					[],
+					null,
+					null,
+					use_antialiasing
+			)
