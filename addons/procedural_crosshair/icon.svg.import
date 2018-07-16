@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/icon.png-df321dbed4377ae78c00181d5e011309.stex"
+path="res://.import/icon.svg-8391dab1d13b346871aecc6feef301af.stex"
 
 [deps]
 
-source_file="res://addons/procedural_crosshair/icon.png"
-dest_files=[ "res://.import/icon.png-df321dbed4377ae78c00181d5e011309.stex" ]
+source_file="res://addons/procedural_crosshair/icon.svg"
+dest_files=[ "res://.import/icon.svg-8391dab1d13b346871aecc6feef301af.stex" ]
 
 [params]
 

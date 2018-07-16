@@ -11,7 +11,7 @@ func _enter_tree():
 		"Crosshair",
 		"Node2D",
 		preload("procedural_crosshair.gd"),
-		preload("icon.png")
+		preload("icon.svg")
 	)
 
 func _exit_tree():
