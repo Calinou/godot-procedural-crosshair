@@ -62,6 +62,9 @@ export(float, 0.0, 100.0) var marker_arms_length = 10.0
 # Higher values will look more "slanted"
 export(float, -100.0, 100.0) var marker_arms_slope = 0.0
 
+# How much are markers' arms spread apart
+export(float, 0.0, 100.0) var marker_arms_spread = 0.0
+
 # The width of markers
 export(float, 0.0, 50.0) var marker_width = 2.0
 
@@ -185,28 +188,28 @@ func _draw():
 					],
 				])
 
-			if marker_arms_length > 0.0:
+			if marker_arms_length > 0.0 or marker_arms_slope != 0.0:
 				lines = 3
 
 				for side in [-1, 1]:
 					# Left side/right side
 					marker_points.append([
 						[
-							Vector2(0, -marker_length/2) \
+							Vector2(marker_arms_spread*side, -marker_length/2) \
 									.rotated(rot_local)
 							+ Vector2(0, -markers_spread) \
 									.rotated(rot_global),
-							Vector2(-marker_arms_length*side, -marker_length/2 - marker_arms_slope) \
+							Vector2((marker_arms_spread + marker_arms_length)*side, -marker_length/2 - marker_arms_slope) \
 									.rotated(rot_local)
 							+ Vector2(0, -markers_spread) \
 									.rotated(rot_global),
 						],
 						[
-							Vector2(0, -marker_length/2) \
+							Vector2(marker_arms_spread*side, -marker_length/2) \
 									.rotated(rot_local)
 							+ Vector2(0, -markers_spread) \
 									.rotated(rot_global),
-							Vector2(-marker_arms_length*side - marker_outline_width*side/2, -marker_length/2 - marker_arms_slope) \
+							Vector2((marker_arms_spread + marker_arms_length)*side - marker_outline_width*side/2, -marker_length/2 - marker_arms_slope) \
 									.rotated(rot_local)
 							+ Vector2(0, -markers_spread) \
 									.rotated(rot_global),

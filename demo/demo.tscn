@@ -57,6 +57,7 @@ markers_count = 4
 marker_length = 10.0
 marker_arms_length = 10.0
 marker_arms_slope = 0.0
+marker_arms_spread = 0.0
 marker_width = 2.0
 marker_outline_width = 1.0
 marker_angle_arc = 360.0
