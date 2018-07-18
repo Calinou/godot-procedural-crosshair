@@ -6,23 +6,69 @@
 [sub_resource type="Animation" id=1]
 
 resource_name = "animate_spread"
-length = 2.0
+length = 3.0
 loop = true
 step = 0.1
 tracks/0/type = "value"
-tracks/0/path = NodePath("Crosshair:markers_spread")
+tracks/0/path = NodePath("Crosshairs/CrosshairRing:shape_size")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1, 2 ),
-"transitions": PoolRealArray( -2, -2, -2 ),
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( -2, -2 ),
 "update": 0,
-"values": [ 0.0, 100.0, 0.0 ]
+"values": [ 10.0, 75.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Crosshairs/CrosshairTShape:markers_spread")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( -2, -2 ),
+"update": 0,
+"values": [ 5.0, 75.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Crosshairs/CrosshairLines:markers_spread")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( -2.23517e-08, 1.5 ),
+"transitions": PoolRealArray( -2, -2 ),
+"update": 0,
+"values": [ 0.0, 75.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Crosshairs/CrosshairSquare:markers_spread")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( -2, -2 ),
+"update": 0,
+"values": [ 16.0, 75.0 ]
 }
 
-[node name="Node2D" type="Node2D" index="0"]
+[node name="Demo" type="Control" index="0"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
 _sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="0"]
@@ -30,22 +76,152 @@ root_node = NodePath("..")
 autoplay = "animate_spread"
 playback_process_mode = 1
 playback_default_blend_time = 0.0
-playback_speed = 0.5
+playback_speed = 1.0
 anims/animate_spread = SubResource( 1 )
 blend_times = [  ]
 _sections_unfolded = [ "Playback Options" ]
 
-[node name="Crosshair" type="Node2D" parent="." index="1"]
-position = Vector2( 512, 288 )
+[node name="Panel" type="Panel" parent="." index="1"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+margin_right = 300.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="Crosshairs" type="GridContainer" parent="." index="2"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -50.0
+margin_top = -160.0
+margin_right = 512.0
+margin_bottom = 288.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/vseparation = 300
+custom_constants/hseparation = 300
+columns = 2
+_sections_unfolded = [ "Custom Constants", "Margin", "Rect" ]
+
+[node name="CrosshairRing" type="Control" parent="Crosshairs" index="0"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
 script = ExtResource( 1 )
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Focus", "Grow Direction", "Hint", "Margin", "Material", "Mouse", "Rect", "Size Flags", "Visibility" ]
 __meta__ = {
 "_editor_icon": ExtResource( 2 )
 }
-shape_size = 1.0
+shape_size = 10.0
 shape_sides = 64
-shape_stroke_width = 1.1
-shape_outline_width = 1.1
+shape_stroke_width = 1.0
+shape_outline_width = 0.2
+shape_rotation = 0.0
+fill_shape = false
+shape_stroke_modulate = Color( 1, 1, 1, 0.498039 )
+shape_fill_modulate = Color( 1, 1, 1, 1 )
+shape_outline_modulate = Color( 1, 1, 1, 0.25098 )
+marker_style = 0
+markers_spread = 0.0
+markers_count = 0
+marker_length = 10.0
+marker_arms_length = 10.0
+marker_arms_slope = 0.0
+marker_arms_spread = 0.0
+marker_width = 0.0
+marker_outline_width = 1.0
+marker_angle_arc = 360.0
+marker_local_rotation = 0.0
+marker_global_rotation = 0.0
+marker_modulate_base = Color( 1, 1, 1, 1 )
+marker_modulate_tip = Color( 1, 1, 1, 0 )
+marker_modulate_outline_base = Color( 0, 0, 0, 0.5 )
+marker_modulate_outline_tip = Color( 0, 0, 0, 0 )
+use_antialiasing = true
+
+[node name="CrosshairStatic" type="Control" parent="Crosshairs/CrosshairRing" index="0"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = ExtResource( 1 )
+_sections_unfolded = [ "Focus", "Grow Direction", "Hint", "Material", "Mouse", "Rect", "Size Flags", "Visibility" ]
+__meta__ = {
+"_editor_icon": ExtResource( 2 )
+}
+shape_size = 0.8
+shape_sides = 4
+shape_stroke_width = 0.0
+shape_outline_width = 0.0
+shape_rotation = 0.0
+fill_shape = true
+shape_stroke_modulate = Color( 1, 1, 1, 1 )
+shape_fill_modulate = Color( 1, 1, 1, 1 )
+shape_outline_modulate = Color( 0, 0, 0, 0.5 )
+marker_style = 0
+markers_spread = 0.0
+markers_count = 0
+marker_length = 10.0
+marker_arms_length = 10.0
+marker_arms_slope = 0.0
+marker_arms_spread = 0.0
+marker_width = 2.0
+marker_outline_width = 1.0
+marker_angle_arc = 360.0
+marker_local_rotation = 0.0
+marker_global_rotation = 0.0
+marker_modulate_base = Color( 1, 1, 1, 1 )
+marker_modulate_tip = Color( 1, 1, 1, 0 )
+marker_modulate_outline_base = Color( 0, 0, 0, 0.5 )
+marker_modulate_outline_tip = Color( 0, 0, 0, 0 )
+use_antialiasing = true
+
+[node name="CrosshairTShape" type="Control" parent="Crosshairs" index="1"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 300.0
+margin_right = 300.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = ExtResource( 1 )
+_sections_unfolded = [ "Focus", "Grow Direction", "Hint", "Material", "Mouse", "Rect", "Size Flags", "Visibility" ]
+__meta__ = {
+"_editor_icon": ExtResource( 2 )
+}
+shape_size = 0.8
+shape_sides = 4
+shape_stroke_width = 0.0
+shape_outline_width = 0.0
 shape_rotation = 0.0
 fill_shape = true
 shape_stroke_modulate = Color( 1, 1, 1, 1 )
@@ -58,13 +234,105 @@ marker_length = 10.0
 marker_arms_length = 10.0
 marker_arms_slope = 0.0
 marker_arms_spread = 0.0
-marker_width = 2.0
-marker_outline_width = 1.0
+marker_width = 1.0
+marker_outline_width = 0.0
 marker_angle_arc = 360.0
 marker_local_rotation = 0.0
 marker_global_rotation = 0.0
 marker_modulate_base = Color( 1, 1, 1, 1 )
 marker_modulate_tip = Color( 1, 1, 1, 0 )
+marker_modulate_outline_base = Color( 0, 0, 0, 0.5 )
+marker_modulate_outline_tip = Color( 0, 0, 0, 0 )
+use_antialiasing = true
+
+[node name="CrosshairLines" type="Control" parent="Crosshairs" index="2"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 300.0
+margin_bottom = 300.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = ExtResource( 1 )
+_sections_unfolded = [ "Focus", "Grow Direction", "Hint", "Material", "Mouse", "Rect", "Size Flags", "Visibility" ]
+__meta__ = {
+"_editor_icon": ExtResource( 2 )
+}
+shape_size = 0.8
+shape_sides = 4
+shape_stroke_width = 0.0
+shape_outline_width = 0.0
+shape_rotation = 0.0
+fill_shape = true
+shape_stroke_modulate = Color( 1, 1, 1, 1 )
+shape_fill_modulate = Color( 1, 1, 1, 1 )
+shape_outline_modulate = Color( 0, 0, 0, 0.5 )
+marker_style = 0
+markers_spread = 3.33067e-14
+markers_count = 4
+marker_length = 10.0
+marker_arms_length = 0.0
+marker_arms_slope = 0.0
+marker_arms_spread = 0.0
+marker_width = 1.1
+marker_outline_width = 0.0
+marker_angle_arc = 360.0
+marker_local_rotation = 0.0
+marker_global_rotation = 0.0
+marker_modulate_base = Color( 1, 1, 1, 1 )
+marker_modulate_tip = Color( 1, 1, 1, 0 )
+marker_modulate_outline_base = Color( 0, 0, 0, 0.5 )
+marker_modulate_outline_tip = Color( 0, 0, 0, 0 )
+use_antialiasing = true
+
+[node name="CrosshairSquare" type="Control" parent="Crosshairs" index="3"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 300.0
+margin_top = 300.0
+margin_right = 300.0
+margin_bottom = 300.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+script = ExtResource( 1 )
+_sections_unfolded = [ "Focus", "Grow Direction", "Hint", "Material", "Mouse", "Rect", "Size Flags", "Visibility" ]
+__meta__ = {
+"_editor_icon": ExtResource( 2 )
+}
+shape_size = 0.8
+shape_sides = 4
+shape_stroke_width = 0.0
+shape_outline_width = 0.0
+shape_rotation = 0.0
+fill_shape = true
+shape_stroke_modulate = Color( 1, 1, 1, 1 )
+shape_fill_modulate = Color( 1, 1, 1, 1 )
+shape_outline_modulate = Color( 0, 0, 0, 0.5 )
+marker_style = 0
+markers_spread = 0.0
+markers_count = 4
+marker_length = 0.0
+marker_arms_length = 8.0
+marker_arms_slope = -8.0
+marker_arms_spread = 0.0
+marker_width = 1.1
+marker_outline_width = 0.0
+marker_angle_arc = 360.0
+marker_local_rotation = 0.0
+marker_global_rotation = 45.0
+marker_modulate_base = Color( 1, 1, 1, 1 )
+marker_modulate_tip = Color( 1, 1, 1, 0.25098 )
 marker_modulate_outline_base = Color( 0, 0, 0, 0.5 )
 marker_modulate_outline_tip = Color( 0, 0, 0, 0 )
 use_antialiasing = true

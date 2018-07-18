@@ -4,7 +4,7 @@
 # See `LICENSE.md` included in the source distribution for details.
 
 tool
-extends Node2D
+extends Control
 
 enum Marker {
 	LINE,
@@ -63,7 +63,7 @@ export(float, 0.0, 100.0) var marker_arms_length = 10.0
 export(float, -100.0, 100.0) var marker_arms_slope = 0.0
 
 # How much are markers' arms spread apart
-export(float, 0.0, 100.0) var marker_arms_spread = 0.0
+export(float, -100.0, 100.0) var marker_arms_spread = 0.0
 
 # The width of markers
 export(float, 0.0, 50.0) var marker_width = 2.0

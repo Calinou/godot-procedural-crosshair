@@ -9,7 +9,7 @@ extends EditorPlugin
 func _enter_tree():
 	add_custom_type(
 		"Crosshair",
-		"Node2D",
+		"Control",
 		preload("procedural_crosshair.gd"),
 		preload("icon.svg")
 	)
