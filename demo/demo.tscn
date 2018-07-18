@@ -10,7 +10,7 @@ length = 2.0
 loop = true
 step = 0.1
 tracks/0/type = "value"
-tracks/0/path = NodePath("Crosshair:markers_spread")
+tracks/0/path = NodePath("Crosshair:markers/spread")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -22,8 +22,22 @@ tracks/0/keys = {
 "values": [ 0.0, 100.0, 0.0 ]
 }
 
-[node name="Node2D" type="Node2D" index="0"]
+[node name="Demo" type="Control" index="0"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
 _sections_unfolded = [ "Transform", "Visibility" ]
+__meta__ = {
+"_edit_horizontal_guides_": [  ],
+"_edit_vertical_guides_": [  ]
+}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="0"]
 root_node = NodePath("..")
@@ -38,34 +52,8 @@ _sections_unfolded = [ "Playback Options" ]
 [node name="Crosshair" type="Node2D" parent="." index="1"]
 position = Vector2( 512, 288 )
 script = ExtResource( 1 )
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Shape", "Transform", "script" ]
 __meta__ = {
 "_editor_icon": ExtResource( 2 )
 }
-shape_size = 1.0
-shape_sides = 64
-shape_stroke_width = 1.1
-shape_outline_width = 1.1
-shape_rotation = 0.0
-fill_shape = true
-shape_stroke_modulate = Color( 1, 1, 1, 1 )
-shape_fill_modulate = Color( 1, 1, 1, 1 )
-shape_outline_modulate = Color( 0, 0, 0, 0.5 )
-marker_style = 0
-markers_spread = 0.0
-markers_count = 4
-marker_length = 10.0
-marker_arms_length = 10.0
-marker_arms_slope = 0.0
-marker_arms_spread = 0.0
-marker_width = 2.0
-marker_outline_width = 1.0
-marker_angle_arc = 360.0
-marker_local_rotation = 0.0
-marker_global_rotation = 0.0
-marker_modulate_base = Color( 1, 1, 1, 1 )
-marker_modulate_tip = Color( 1, 1, 1, 0 )
-marker_modulate_outline_base = Color( 0, 0, 0, 0.5 )
-marker_modulate_outline_tip = Color( 0, 0, 0, 0 )
-use_antialiasing = true
 
