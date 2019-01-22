@@ -336,4 +336,3 @@ marker_modulate_tip = Color( 1, 1, 1, 0.25098 )
 marker_modulate_outline_base = Color( 0, 0, 0, 0.5 )
 marker_modulate_outline_tip = Color( 0, 0, 0, 0 )
 use_antialiasing = true
-
