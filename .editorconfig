@@ -11,7 +11,3 @@ trim_trailing_whitespace = true
 [*.gd]
 indent_style = tab
 indent_size = 4
-
-[Makefile]
-indent_style = tab
-indent_size = 4
